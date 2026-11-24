@@ -83,10 +83,16 @@ md 都由你写，一个实体一个 `##` 小节；图和视频由 CLI 的 `--ou
 
 首次使用前先检查 `jimeng-novel --version` 与 `jimeng-novel status`（启动前设置 `METRICS_LOG_LEVEL=none` 避免依赖日志混入 JSON）。运行环境需要 Node.js 18+ 与 Python 3.10+；成片合成与抽帧另需 FFmpeg。日常创作不自动更新。
 
-macOS / Linux 安装或更新 CLI（Windows 可使用对应的公开 npm 包或发布说明中的 PowerShell 安装器）：
+macOS / Linux 安装或更新 CLI（隔离散装 Skill 以免与 Codex 插件重复加载；Windows 可使用对应的公开 npm 包或发布说明中的 PowerShell 安装器）：
 
 ```bash
-(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash)
+(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir "$HOME/.local/share/jimeng-novel/standalone-skills")
+```
+
+若此前曾直接运行过未隔离参数的一键脚本，可执行以下命令仅清理安装器创建的散装 Skill 软链接（不会删除用户自建目录）：
+
+```bash
+python3 -c 'import os; from pathlib import Path; rel = (Path.home() / ".local/share/jimeng-novel/releases").resolve(); dirs = [Path.home() / ".agents/skills", Path(os.environ.get("CODEX_HOME", str(Path.home() / ".codex"))) / "skills"]; [p.unlink() for d in dirs for n in ("jimeng-drama", "jimeng-short-drama") for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == "skills" and p.resolve().parent.parent.parent == rel]'
 ```
 
 安装或更新 CLI 会保留已有 Passport 登录态（没有 `jimeng-novel update` 子命令）。完成后运行 `command -v jimeng-novel`（Windows 运行 `where.exe jimeng-novel`）核对命令入口，排查是否被 `~/.local/bin` 旧入口遮蔽，再运行 `jimeng-novel --version` 与 `jimeng-novel status` 确认版本和登录态。更新本插件本身时，通过插件市场升级（如 `codex plugin marketplace upgrade jimeng-plugins` 后重新加载 `jimeng-drama`），并在必要时开启新会话使新版 Skill 生效。

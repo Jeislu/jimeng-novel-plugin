@@ -21,16 +21,23 @@
       <li>Verify Node.js 18+ (<code>node -v</code>), Python 3.10+ (<code>python3 --version</code>), and check <code>METRICS_LOG_LEVEL=none jimeng-novel --version</code>.</li>
       <li>If missing or outdated, install via:
         <ul>
-        <li>macOS / Linux standalone installer:<pre><code>(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash)</code></pre></li>
+        <li>macOS / Linux standalone installer (isolates standalone skills away from <code>~/.agents/skills</code> and <code>~/.codex/skills</code> so the Codex plugin stays the single skill source):<pre><code>(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)</code></pre></li>
         </ul>
       </li>
       <li>Check binary resolution (<code>command -v jimeng-novel</code> on macOS/Linux, <code>where.exe jimeng-novel</code> on Windows) to ensure no stale launcher shadows the installed version.</li>
     </ol>
 
     <h2>Step 2: Register Marketplace and Install Plugin</h2>
-    <pre><code>codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
+    <ol>
+      <li>Add the marketplace and install the plugin:
+        <pre><code>codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
 codex plugin add jimeng-drama@jimeng-plugins --json</code></pre>
-    <p>If <code>jimeng-plugins</code> already exists, refresh with <code>codex plugin marketplace upgrade jimeng-plugins</code> first.</p>
+        <p>If <code>jimeng-plugins</code> already exists, refresh with <code>codex plugin marketplace upgrade jimeng-plugins</code> first.</p>
+      </li>
+      <li>Remove any pre-existing installer-managed standalone <code>jimeng-drama</code> symlinks under <code>~/.agents/skills</code> and <code>$CODEX_HOME/skills</code> so Codex does not load duplicate skills (only unlinks symlinks pointing into <code>~/.local/share/jimeng-novel/releases/</code>; never touches user-owned folders):
+        <pre><code>python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;</code></pre>
+      </li>
+    </ol>
 
     <h2>Step 3: Authorize Jimeng Account</h2>
     <ol>
