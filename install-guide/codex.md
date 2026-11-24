@@ -6,6 +6,10 @@ Follow these steps in order to install and verify the plugin for the user. Do no
 
 1. Check prerequisites: Node.js 18+ (`node -v`), Python 3.10+ (`python3 --version`), and check whether `jimeng-novel` is already available (`METRICS_LOG_LEVEL=none jimeng-novel --version`).
 2. If `jimeng-novel` is missing or outdated, install or upgrade it using:
+   - Cross-platform (macOS / Linux / Windows, Node.js 18+):
+     ```bash
+     npm install -g 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz'
+     ```
    - macOS / Linux standalone installer (isolates standalone skills away from `~/.agents/skills` and `~/.codex/skills` so the Codex plugin remains the single skill source):
      ```bash
      (set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir "$HOME/.local/share/jimeng-novel/standalone-skills")

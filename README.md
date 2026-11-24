@@ -16,7 +16,9 @@ Read jeislu.github.io/jimeng-novel-plugin/ to install the Jimeng Drama plugin
 
 ```bash
 # 1. Install jimeng-novel CLI (Node.js 18+, Python 3.10+; isolates standalone skills from Codex)
-(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir "$HOME/.local/share/jimeng-novel/standalone-skills")
+npm install -g 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz'
+# Or macOS / Linux standalone fallback:
+# (set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir "$HOME/.local/share/jimeng-novel/standalone-skills")
 
 # 2. Add this marketplace and install the plugin
 codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main
