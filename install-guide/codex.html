@@ -278,7 +278,9 @@
 
     /* Crisp dark code strips on pure white background */
     .code-box {
-      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
       margin: 10px 0 14px;
       border-radius: 10px;
       background: var(--code-bg);
@@ -286,8 +288,10 @@
     }
 
     pre {
+      flex: 1;
+      min-width: 0;
       margin: 0;
-      padding: 14px 68px 14px 16px;
+      padding: 14px 8px 14px 16px;
       overflow-x: auto;
       font-size: 13px;
       line-height: 1.6;
@@ -318,16 +322,15 @@
     }
 
     .copy-inline {
-      position: absolute;
-      top: 10px;
-      right: 10px;
+      flex-shrink: 0;
+      margin: 10px 10px 10px 0;
       appearance: none;
       border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.08);
       color: #cbd5e1;
       font-family: var(--sans);
       font-size: 12px;
-      padding: 3px 9px;
+      padding: 3px 10px;
       border-radius: 6px;
       cursor: pointer;
       transition: background 0.15s ease, color 0.15s ease;
