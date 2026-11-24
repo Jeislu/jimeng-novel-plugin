@@ -88,13 +88,13 @@ md 都由你写，一个实体一个 `##` 小节；图和视频由 CLI 的 `--ou
 macOS / Linux：
 
 ```bash
-TGZ_URL="$(node -e 'fetch("https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json").then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(!/^https:\/\/\S+\.tgz$/.test(d.npm_url||""))process.exit(1);console.log(d.npm_url)})')" && npm install -g "$TGZ_URL"
+TGZ_URL="$(node -e 'fetch("https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json").then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(typeof d?.npm_url!=="string"||!/^https:\/\/\S+\.tgz$/.test(d.npm_url))process.exit(1);console.log(d.npm_url)}).catch(()=>process.exit(1))')" && [ -n "$TGZ_URL" ] && npm install -g "$TGZ_URL"
 ```
 
 Windows PowerShell：
 
 ```powershell
-$u = (Invoke-RestMethod 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json').npm_url; if ($u -notmatch '^https://\S+\.tgz$') { throw 'invalid npm_url' }; npm install -g $u
+[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $r = Invoke-RestMethod 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json'; if ($r -is [string]) { $r = $r | ConvertFrom-Json }; $u = $r.npm_url; if ($u -isnot [string] -or $u -notmatch '\Ahttps://\S+\.tgz\z') { throw 'invalid npm_url' }; npm install -g $u
 ```
 
 macOS / Linux 备选一键安装脚本（或升级已有脚本安装；隔离散装 Skill 以免与 Codex 插件重复加载）：
@@ -103,10 +103,10 @@ macOS / Linux 备选一键安装脚本（或升级已有脚本安装；隔离散
 (set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir "$HOME/.local/share/jimeng-novel/standalone-skills")
 ```
 
-若此前曾直接运行过未隔离参数的一键脚本，可执行以下命令仅清理安装器创建的散装 Skill 软链接（不会删除用户自建目录）：
+若此前曾直接运行过未隔离参数的一键脚本，可执行以下命令仅清理安装器创建的散装 Skill 软链接（仅 macOS / Linux，不会删除用户自建目录）：
 
 ```bash
-python3 -c 'import os; from pathlib import Path; rel = (Path.home() / ".local/share/jimeng-novel/releases").resolve(); dirs = [Path.home() / ".agents/skills", Path(os.environ.get("CODEX_HOME", str(Path.home() / ".codex"))) / "skills"]; [p.unlink() for d in dirs for n in ("jimeng-drama", "jimeng-short-drama") for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == "skills" and p.resolve().parent.parent.parent == rel]'
+python3 -c 'import os; from pathlib import Path; rel = (Path.home() / ".local/share/jimeng-novel/releases").resolve(); dirs = [Path.home() / ".agents/skills", Path(os.environ.get("CODEX_HOME") or str(Path.home() / ".codex")) / "skills"]; [p.unlink() for d in dirs for n in ("jimeng-drama", "jimeng-short-drama") for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == "skills" and p.resolve().parent.parent.parent == rel]'
 ```
 
 安装或更新 CLI 会保留已有 Passport 登录态（没有 `jimeng-novel update` 子命令）。完成后运行 `command -v jimeng-novel`（Windows 运行 `where.exe jimeng-novel`）核对命令入口，排查是否被 `~/.local/bin` 旧入口遮蔽，再运行 `jimeng-novel --version` 与 `jimeng-novel status` 确认版本和登录态。更新本插件本身时，通过插件市场升级（如 `codex plugin marketplace upgrade jimeng-plugins` 后重新加载 `jimeng-drama`），并在必要时开启新会话使新版 Skill 生效。

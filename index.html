@@ -39,7 +39,7 @@
       background: var(--bg);
     }
 
-    /* Top navigation — clean ChatCut-style header */
+    /* Top navigation */
     .header {
       position: sticky;
       top: 0;
@@ -481,59 +481,7 @@
     <main>
       <div class="doc-head">
         <h1>即梦短剧 Codex 插件安装指引</h1>
-        <button type="button" class="copy-pill" data-copy="# 即梦短剧 Codex 插件安装指引（Jimeng Drama v1.0.11）
-
-请按以下顺序为用户完成安装与校验。安装和验证过程仅做只读检查，不要提交任何扣费生成任务。
-
-## 1. 安装或更新 `jimeng-novel` CLI
-
-1. 检查基础环境：确认已安装 Node.js 18+（`node -v`）与 Python 3.10+（`python3 --version`），并检查当前是否已有 `jimeng-novel`（`METRICS_LOG_LEVEL=none jimeng-novel --version`）。
-2. 若未安装或版本过旧，请执行以下命令安装或更新：
-   - 推荐 · 跨平台 npm 安装（自动从固定指针 `https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json` 读取最新版本，需 Node.js 18+）：
-     - macOS / Linux：
-       ```bash
-       TGZ_URL=&quot;$(node -e &#x27;fetch(&quot;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&quot;).then(r=&gt;r.ok?r.json():Promise.reject(r.status)).then(d=&gt;{if(!/^https:\/\/\S+\.tgz$/.test(d.npm_url||&quot;&quot;))process.exit(1);console.log(d.npm_url)})&#x27;)&quot; &amp;&amp; npm install -g &quot;$TGZ_URL&quot;
-       ```
-     - Windows PowerShell：
-       ```powershell
-       $u = (Invoke-RestMethod &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&#x27;).npm_url; if ($u -notmatch &#x27;^https://\S+\.tgz$&#x27;) { throw &#x27;invalid npm_url&#x27; }; npm install -g $u
-       ```
-   - 备选 · macOS / Linux 一键安装脚本（自动隔离散装 Skill，不写入 `~/.agents/skills` 与 `~/.codex/skills`，避免与 Codex 插件重复加载）：
-     ```bash
-     (set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)
-     ```
-3. 检查命令解析路径（macOS / Linux 执行 `command -v jimeng-novel`，Windows 执行 `where.exe jimeng-novel`），确认未被 `~/.local/bin/jimeng-novel` 旧入口遮蔽，再运行 `METRICS_LOG_LEVEL=none jimeng-novel --version` 核对版本。
-
-## 2. 注册插件市场并安装插件
-
-1. 通过 Codex CLI 添加市场并安装插件：
-
-   ```bash
-   codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
-   codex plugin add jimeng-drama@jimeng-plugins --json
-   ```
-
-   - 如果本地已注册过 `jimeng-plugins`，先执行 `codex plugin marketplace upgrade jimeng-plugins` 更新市场后再执行 `codex plugin add jimeng-drama@jimeng-plugins`。
-2. 清理历史散装 Skill 软链接（仅删除 `~/.agents/skills` 与 `$CODEX_HOME/skills` 下由旧安装器创建、指向 `~/.local/share/jimeng-novel/releases/` 的软链接，绝不删除用户自建目录）：
-
-   ```bash
-   python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;
-   ```
-
-## 3. 授权即梦账号
-
-1. 运行 `METRICS_LOG_LEVEL=none jimeng-novel status` 检查登录状态；若已登录可直接进入第 4 步。
-2. 若未登录，查看 `jimeng-novel login --help` 发起非交互式登录，获取官方授权链接（`jimeng.jianying.com`）。在浏览器打开并向用户发送可点击链接，随后执行 CLI 返回的等待命令直至授权完成。
-
-## 4. 零扣费只读验证
-
-1. 运行以下只读命令核对账号与模型列表（不消耗积分）：
-   ```bash
-   METRICS_LOG_LEVEL=none jimeng-novel account get
-   METRICS_LOG_LEVEL=none jimeng-novel model list --type image
-   ```
-2. 验证通过后告知用户安装完成，并提醒用户**新建一个 Codex 对话**以加载 `jimeng-drama` 插件 Skill。
-">
+        <button type="button" class="copy-pill" data-copy="# 即梦短剧 Codex 插件安装指引（Jimeng Drama v1.0.11）&#10;&#10;请按以下顺序为用户完成安装与校验。安装和验证过程仅做只读检查，不要提交任何扣费生成任务。&#10;&#10;## 1. 安装或更新 `jimeng-novel` CLI&#10;&#10;1. 检查基础环境：确认已安装 Node.js 18+（`node -v`）与 Python 3.10+（`python3 --version`），并检查当前是否已有 `jimeng-novel`（`METRICS_LOG_LEVEL=none jimeng-novel --version`）。&#10;2. 若未安装或版本过旧，请执行以下命令安装或更新：&#10;   - 推荐 · 跨平台 npm 安装（自动从固定指针 `https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json` 读取最新版本，需 Node.js 18+）：&#10;     - macOS / Linux：&#10;       ```bash&#10;       TGZ_URL=&quot;$(node -e &#x27;fetch(&quot;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&quot;).then(r=&gt;r.ok?r.json():Promise.reject(r.status)).then(d=&gt;{if(typeof d?.npm_url!==&quot;string&quot;||!/^https:\/\/\S+\.tgz$/.test(d.npm_url))process.exit(1);console.log(d.npm_url)}).catch(()=&gt;process.exit(1))&#x27;)&quot; &amp;&amp; [ -n &quot;$TGZ_URL&quot; ] &amp;&amp; npm install -g &quot;$TGZ_URL&quot;&#10;       ```&#10;     - Windows PowerShell：&#10;       ```powershell&#10;       [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $r = Invoke-RestMethod &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&#x27;; if ($r -is [string]) { $r = $r | ConvertFrom-Json }; $u = $r.npm_url; if ($u -isnot [string] -or $u -notmatch &#x27;\Ahttps://\S+\.tgz\z&#x27;) { throw &#x27;invalid npm_url&#x27; }; npm install -g $u&#10;       ```&#10;   - 备选 · macOS / Linux 一键安装脚本（自动隔离散装 Skill，不写入 `~/.agents/skills` 与 `~/.codex/skills`，避免与 Codex 插件重复加载）：&#10;     ```bash&#10;     (set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)&#10;     ```&#10;3. 检查命令解析路径（macOS / Linux 执行 `command -v jimeng-novel`，Windows 执行 `where.exe jimeng-novel`），确认未被 `~/.local/bin/jimeng-novel` 旧入口遮蔽，再运行 `METRICS_LOG_LEVEL=none jimeng-novel --version` 核对版本。&#10;&#10;## 2. 注册插件市场并安装插件&#10;&#10;1. 通过 Codex CLI 添加市场并安装插件：&#10;&#10;   ```bash&#10;   codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json&#10;   codex plugin add jimeng-drama@jimeng-plugins --json&#10;   ```&#10;&#10;   - 如果本地已注册过 `jimeng-plugins`，先执行 `codex plugin marketplace upgrade jimeng-plugins` 更新市场后再执行 `codex plugin add jimeng-drama@jimeng-plugins`。&#10;2. 清理历史散装 Skill 软链接（仅 macOS / Linux；仅删除 `~/.agents/skills` 与 `$CODEX_HOME/skills` 下由旧安装器创建、指向 `~/.local/share/jimeng-novel/releases/` 的软链接，绝不删除用户自建目录）：&#10;&#10;   ```bash&#10;   python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;) or str(Path.home() / &quot;.codex&quot;)) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;&#10;   ```&#10;&#10;## 3. 授权即梦账号&#10;&#10;1. 运行 `METRICS_LOG_LEVEL=none jimeng-novel status` 检查登录状态；若已登录可直接进入第 4 步。&#10;2. 若未登录，查看 `jimeng-novel login --help` 发起非交互式登录，获取官方授权链接（`jimeng.jianying.com`）。在浏览器打开并向用户发送可点击链接，随后执行 CLI 返回的等待命令直至授权完成。&#10;&#10;## 4. 零扣费只读验证&#10;&#10;1. 运行以下只读命令核对账号与模型列表（不消耗积分）：&#10;   ```bash&#10;   METRICS_LOG_LEVEL=none jimeng-novel account get&#10;   METRICS_LOG_LEVEL=none jimeng-novel model list --type image&#10;   ```&#10;2. 验证通过后告知用户安装完成，并提醒用户**新建一个 Codex 对话**以加载 `jimeng-drama` 插件 Skill。&#10;">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <rect x="9" y="9" width="13" height="13" rx="2"></rect>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -551,7 +499,7 @@
         <h2>1. 安装或更新 jimeng-novel CLI</h2>
         <p>先检查基础环境：确认已安装 Node.js 18+（<code>node -v</code>）和 Python 3.10+（<code>python3 --version</code>），并执行 <code>METRICS_LOG_LEVEL=none jimeng-novel --version</code> 查看当前状态。若未安装或版本过旧，任选以下一种方式：</p>
 
-        <div class="sub-block"><p class="sub-label">跨平台 npm 安装 — macOS / Linux（推荐，自动拉取最新版本）</p><p class="sub-note">自动读取固定指针 <a href="https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json" target="_blank" rel="noopener noreferrer"><code>latest.json</code></a> 中的最新 <code>npm_url</code>，需 Node.js 18+：</p><div class="code-box"><pre><code>TGZ_URL=&quot;$(node -e &#x27;fetch(&quot;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&quot;).then(r=&gt;r.ok?r.json():Promise.reject(r.status)).then(d=&gt;{if(!/^https:\/\/\S+\.tgz$/.test(d.npm_url||&quot;&quot;))process.exit(1);console.log(d.npm_url)})&#x27;)&quot; &amp;&amp; npm install -g &quot;$TGZ_URL&quot;</code></pre><button type="button" class="copy-inline" data-copy="TGZ_URL=&quot;$(node -e &#x27;fetch(&quot;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&quot;).then(r=&gt;r.ok?r.json():Promise.reject(r.status)).then(d=&gt;{if(!/^https:\/\/\S+\.tgz$/.test(d.npm_url||&quot;&quot;))process.exit(1);console.log(d.npm_url)})&#x27;)&quot; &amp;&amp; npm install -g &quot;$TGZ_URL&quot;" aria-label="复制命令">复制</button></div></div><div class="sub-block"><p class="sub-label">跨平台 npm 安装 — Windows PowerShell（推荐，自动拉取最新版本）</p><p class="sub-note">支持 Windows x64，需 Node.js 18+：</p><div class="code-box"><pre><code>$u = (Invoke-RestMethod &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&#x27;).npm_url; if ($u -notmatch &#x27;^https://\S+\.tgz$&#x27;) { throw &#x27;invalid npm_url&#x27; }; npm install -g $u</code></pre><button type="button" class="copy-inline" data-copy="$u = (Invoke-RestMethod &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&#x27;).npm_url; if ($u -notmatch &#x27;^https://\S+\.tgz$&#x27;) { throw &#x27;invalid npm_url&#x27; }; npm install -g $u" aria-label="复制命令">复制</button></div></div>
+        <div class="sub-block"><p class="sub-label">跨平台 npm 安装 — macOS / Linux（推荐，自动拉取最新版本）</p><p class="sub-note">自动读取固定指针 <a href="https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json" target="_blank" rel="noopener noreferrer"><code>latest.json</code></a> 中的最新 <code>npm_url</code>，需 Node.js 18+：</p><div class="code-box"><pre><code>TGZ_URL=&quot;$(node -e &#x27;fetch(&quot;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&quot;).then(r=&gt;r.ok?r.json():Promise.reject(r.status)).then(d=&gt;{if(typeof d?.npm_url!==&quot;string&quot;||!/^https:\/\/\S+\.tgz$/.test(d.npm_url))process.exit(1);console.log(d.npm_url)}).catch(()=&gt;process.exit(1))&#x27;)&quot; &amp;&amp; [ -n &quot;$TGZ_URL&quot; ] &amp;&amp; npm install -g &quot;$TGZ_URL&quot;</code></pre><button type="button" class="copy-inline" data-copy="TGZ_URL=&quot;$(node -e &#x27;fetch(&quot;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&quot;).then(r=&gt;r.ok?r.json():Promise.reject(r.status)).then(d=&gt;{if(typeof d?.npm_url!==&quot;string&quot;||!/^https:\/\/\S+\.tgz$/.test(d.npm_url))process.exit(1);console.log(d.npm_url)}).catch(()=&gt;process.exit(1))&#x27;)&quot; &amp;&amp; [ -n &quot;$TGZ_URL&quot; ] &amp;&amp; npm install -g &quot;$TGZ_URL&quot;" aria-label="复制命令">复制</button></div></div><div class="sub-block"><p class="sub-label">跨平台 npm 安装 — Windows PowerShell（推荐，自动拉取最新版本）</p><p class="sub-note">支持 Windows x64，需 Node.js 18+：</p><div class="code-box"><pre><code>[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $r = Invoke-RestMethod &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&#x27;; if ($r -is [string]) { $r = $r | ConvertFrom-Json }; $u = $r.npm_url; if ($u -isnot [string] -or $u -notmatch &#x27;\Ahttps://\S+\.tgz\z&#x27;) { throw &#x27;invalid npm_url&#x27; }; npm install -g $u</code></pre><button type="button" class="copy-inline" data-copy="[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $r = Invoke-RestMethod &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json&#x27;; if ($r -is [string]) { $r = $r | ConvertFrom-Json }; $u = $r.npm_url; if ($u -isnot [string] -or $u -notmatch &#x27;\Ahttps://\S+\.tgz\z&#x27;) { throw &#x27;invalid npm_url&#x27; }; npm install -g $u" aria-label="复制命令">复制</button></div></div>
           <div class="sub-block"><p class="sub-label">macOS / Linux 一键脚本（备选）</p><p class="sub-note">自动将散装 Skill 隔离到独立目录，不写入 <code>~/.agents/skills</code> 和 <code>~/.codex/skills</code>，避免与 Codex 插件重复加载：</p><div class="code-box"><pre><code>(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)</code></pre><button type="button" class="copy-inline" data-copy="(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)" aria-label="复制命令">复制</button></div></div>
 
         <p>安装完成后，检查命令实际指向（macOS / Linux 执行 <code>command -v jimeng-novel</code>，Windows 执行 <code>where.exe jimeng-novel</code>），确认没有被 <code>~/.local/bin/jimeng-novel</code> 旧入口遮蔽，再确认 <code>METRICS_LOG_LEVEL=none jimeng-novel --version</code> 正常输出版本号。</p>
@@ -562,15 +510,14 @@
         <p>通过 Codex CLI 添加插件市场并安装 <code>jimeng-drama</code>：</p>
 
         <div class="code-box"><pre><code>codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
-codex plugin add jimeng-drama@jimeng-plugins --json</code></pre><button type="button" class="copy-inline" data-copy="codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
-codex plugin add jimeng-drama@jimeng-plugins --json" aria-label="复制命令">复制</button></div>
+codex plugin add jimeng-drama@jimeng-plugins --json</code></pre><button type="button" class="copy-inline" data-copy="codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json&#10;codex plugin add jimeng-drama@jimeng-plugins --json" aria-label="复制命令">复制</button></div>
 
         <p>如果本机之前已注册过 <code>jimeng-plugins</code>，先执行 <code>codex plugin marketplace upgrade jimeng-plugins</code> 刷新市场，再重新安装插件。</p>
 
         <div class="sub-block">
-          <p class="sub-label">清理旧安装器的散装 Skill 软链接（防重复加载）</p>
-          <p class="sub-note">如果你此前直接运行过一键安装脚本，执行下方命令可安全移除 <code>~/.agents/skills</code> 与 <code>$CODEX_HOME/skills</code> 中指向 <code>~/.local/share/jimeng-novel/releases/</code> 的软链接，绝不会触碰用户自建目录：</p>
-          <div class="code-box"><pre><code>python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;</code></pre><button type="button" class="copy-inline" data-copy="python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;" aria-label="复制命令">复制</button></div>
+          <p class="sub-label">清理旧安装器的散装 Skill 软链接（仅 macOS / Linux，防重复加载）</p>
+          <p class="sub-note">如果你此前在 macOS / Linux 直接运行过一键安装脚本，执行下方命令可安全移除 <code>~/.agents/skills</code> 与 <code>$CODEX_HOME/skills</code> 中指向 <code>~/.local/share/jimeng-novel/releases/</code> 的软链接，绝不会触碰用户自建目录：</p>
+          <div class="code-box"><pre><code>python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;) or str(Path.home() / &quot;.codex&quot;)) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;</code></pre><button type="button" class="copy-inline" data-copy="python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;) or str(Path.home() / &quot;.codex&quot;)) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;" aria-label="复制命令">复制</button></div>
         </div>
       </section>
 
@@ -587,8 +534,7 @@ codex plugin add jimeng-drama@jimeng-plugins --json" aria-label="复制命令">�
         <p>运行以下只读命令核对账号信息与可用模型列表（不会发起任何生成或扣费操作）：</p>
 
         <div class="code-box"><pre><code>METRICS_LOG_LEVEL=none jimeng-novel account get
-METRICS_LOG_LEVEL=none jimeng-novel model list --type image</code></pre><button type="button" class="copy-inline" data-copy="METRICS_LOG_LEVEL=none jimeng-novel account get
-METRICS_LOG_LEVEL=none jimeng-novel model list --type image" aria-label="复制命令">复制</button></div>
+METRICS_LOG_LEVEL=none jimeng-novel model list --type image</code></pre><button type="button" class="copy-inline" data-copy="METRICS_LOG_LEVEL=none jimeng-novel account get&#10;METRICS_LOG_LEVEL=none jimeng-novel model list --type image" aria-label="复制命令">复制</button></div>
 
         <div class="note-box">
           验证通过后即可告知用户安装完成，并提醒用户<strong>新建一个 Codex 对话</strong>，让 <code>jimeng-drama</code> 插件 Skill 正式生效。
@@ -617,20 +563,28 @@ METRICS_LOG_LEVEL=none jimeng-novel model list --type image" aria-label="复制�
 
   <script>
     (function () {
-      function copyText(text) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          return navigator.clipboard.writeText(text);
-        }
+      function fallbackCopy(text) {
         return new Promise(function (resolve, reject) {
           var ta = document.createElement('textarea');
           ta.value = text;
+          ta.setAttribute('readonly', '');
           ta.style.position = 'fixed';
           ta.style.opacity = '0';
           document.body.appendChild(ta);
           ta.select();
-          try { document.execCommand('copy'); resolve(); } catch (e) { reject(e); }
+          var ok = false;
+          try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
           document.body.removeChild(ta);
+          if (ok) resolve(); else reject(new Error('copy failed'));
         });
+      }
+      function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(text).catch(function () {
+            return fallbackCopy(text);
+          });
+        }
+        return fallbackCopy(text);
       }
       document.addEventListener('click', function (ev) {
         var btn = ev.target.closest('[data-copy]');
@@ -639,13 +593,15 @@ METRICS_LOG_LEVEL=none jimeng-novel model list --type image" aria-label="复制�
         if (!text) return;
         copyText(text).then(function () {
           var target = btn.querySelector('span') || btn;
-          var prev = target.textContent;
+          if (!btn._origText) {
+            btn._origText = target.textContent;
+          }
           target.textContent = '已复制';
           clearTimeout(btn._t);
           btn._t = setTimeout(function () {
-            target.textContent = prev;
+            target.textContent = btn._origText;
           }, 1500);
-        });
+        }).catch(function () {});
       });
     })();
   </script>

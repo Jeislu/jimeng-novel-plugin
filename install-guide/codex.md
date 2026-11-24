@@ -9,11 +9,11 @@
    - 推荐 · 跨平台 npm 安装（自动从固定指针 `https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json` 读取最新版本，需 Node.js 18+）：
      - macOS / Linux：
        ```bash
-       TGZ_URL="$(node -e 'fetch("https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json").then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(!/^https:\/\/\S+\.tgz$/.test(d.npm_url||""))process.exit(1);console.log(d.npm_url)})')" && npm install -g "$TGZ_URL"
+       TGZ_URL="$(node -e 'fetch("https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json").then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(typeof d?.npm_url!=="string"||!/^https:\/\/\S+\.tgz$/.test(d.npm_url))process.exit(1);console.log(d.npm_url)}).catch(()=>process.exit(1))')" && [ -n "$TGZ_URL" ] && npm install -g "$TGZ_URL"
        ```
      - Windows PowerShell：
        ```powershell
-       $u = (Invoke-RestMethod 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json').npm_url; if ($u -notmatch '^https://\S+\.tgz$') { throw 'invalid npm_url' }; npm install -g $u
+       [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; $r = Invoke-RestMethod 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json'; if ($r -is [string]) { $r = $r | ConvertFrom-Json }; $u = $r.npm_url; if ($u -isnot [string] -or $u -notmatch '\Ahttps://\S+\.tgz\z') { throw 'invalid npm_url' }; npm install -g $u
        ```
    - 备选 · macOS / Linux 一键安装脚本（自动隔离散装 Skill，不写入 `~/.agents/skills` 与 `~/.codex/skills`，避免与 Codex 插件重复加载）：
      ```bash
@@ -31,10 +31,10 @@
    ```
 
    - 如果本地已注册过 `jimeng-plugins`，先执行 `codex plugin marketplace upgrade jimeng-plugins` 更新市场后再执行 `codex plugin add jimeng-drama@jimeng-plugins`。
-2. 清理历史散装 Skill 软链接（仅删除 `~/.agents/skills` 与 `$CODEX_HOME/skills` 下由旧安装器创建、指向 `~/.local/share/jimeng-novel/releases/` 的软链接，绝不删除用户自建目录）：
+2. 清理历史散装 Skill 软链接（仅 macOS / Linux；仅删除 `~/.agents/skills` 与 `$CODEX_HOME/skills` 下由旧安装器创建、指向 `~/.local/share/jimeng-novel/releases/` 的软链接，绝不删除用户自建目录）：
 
    ```bash
-   python3 -c 'import os; from pathlib import Path; rel = (Path.home() / ".local/share/jimeng-novel/releases").resolve(); dirs = [Path.home() / ".agents/skills", Path(os.environ.get("CODEX_HOME", str(Path.home() / ".codex"))) / "skills"]; [p.unlink() for d in dirs for n in ("jimeng-drama", "jimeng-short-drama") for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == "skills" and p.resolve().parent.parent.parent == rel]'
+   python3 -c 'import os; from pathlib import Path; rel = (Path.home() / ".local/share/jimeng-novel/releases").resolve(); dirs = [Path.home() / ".agents/skills", Path(os.environ.get("CODEX_HOME") or str(Path.home() / ".codex")) / "skills"]; [p.unlink() for d in dirs for n in ("jimeng-drama", "jimeng-short-drama") for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == "skills" and p.resolve().parent.parent.parent == rel]'
    ```
 
 ## 3. 授权即梦账号
