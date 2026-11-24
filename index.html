@@ -1,32 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <meta name="description" content="Install Jimeng Drama Codex Plugin (v1.0.11) — multi-episode short drama creation on Jimeng Canvas via jimeng-novel CLI.">
-  <title>Install Jimeng Drama Plugin for Codex</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2307090d'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23ff9e1b'/%3E%3Cstop offset='42%25' stop-color='%2322e6ff'/%3E%3Cstop offset='100%25' stop-color='%230066ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M22 10c4 13 13 19 30 22-17 4-25 11-36 22 6-14 8-27 6-44z' fill='url(%23g)'/%3E%3Crect x='36' y='39' width='18' height='14' rx='3' fill='%23ffffff'/%3E%3Cpolygon points='43,43 43,49 49,46' fill='%2307090d'/%3E%3C/svg%3E">
+  <meta name="description" content="即梦短剧 Codex 插件（Jimeng Drama v1.0.11）安装与验证指引。">
+  <title>即梦短剧 Codex 插件安装指引</title>
   <style>
     :root {
-      --bg: #06080d;
-      --surface: #0d121c;
-      --surface-2: #121927;
-      --code-bg: #080c14;
-      --border: rgba(255, 255, 255, 0.085);
-      --border-strong: rgba(255, 255, 255, 0.16);
-      --text: #f8fafc;
-      --text-2: #a5b4cc;
-      --text-3: #64748b;
-      --cyan: #22e6ff;
-      --cyan-soft: rgba(34, 230, 255, 0.12);
-      --amber: #ffb020;
-      --amber-soft: rgba(255, 176, 32, 0.13);
-      --emerald: #34d399;
-      --radius: 16px;
-      --radius-sm: 11px;
-      --mono: "SF Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "PingFang SC", "Segoe UI", Roboto, sans-serif;
+      --bg: #ffffff;
+      --text: #111111;
+      --text-2: #52525b;
+      --text-3: #8c8c96;
+      --border: #ededef;
+      --border-strong: #dedee3;
+      --code-bg: #1e2028;
+      --code-text: #f1f5f9;
+      --inline-bg: #f4f4f5;
+      --mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Inter", "Segoe UI", sans-serif;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -34,830 +25,563 @@
     html {
       background: var(--bg);
       color: var(--text);
+      scroll-behavior: smooth;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     body {
       margin: 0;
-      min-height: 100vh;
       font-family: var(--sans);
-      line-height: 1.65;
-      color: var(--text);
-      background:
-        radial-gradient(900px 520px at 14% -6%, rgba(34, 230, 255, 0.13), transparent 62%),
-        radial-gradient(760px 460px at 88% 2%, rgba(255, 158, 27, 0.10), transparent 60%),
-        radial-gradient(640px 420px at 50% 100%, rgba(0, 102, 255, 0.09), transparent 65%),
-        var(--bg);
-      position: relative;
-      overflow-x: hidden;
+      font-size: 14.5px;
+      line-height: 1.78;
+      color: var(--text-2);
+      background: var(--bg);
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, transparent 58%);
-      -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, transparent 58%);
-      z-index: 0;
+    /* Top navigation — clean ChatCut-style header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
     }
 
-    .shell {
-      position: relative;
-      z-index: 1;
-      max-width: 900px;
+    .header-inner {
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 24px 22px 72px;
-    }
-
-    /* Top studio bar */
-    .topbar {
+      height: 62px;
+      padding: 0 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 10px 14px;
-      margin-bottom: 42px;
-      border-radius: 999px;
-      background: rgba(13, 18, 28, 0.72);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      gap: 20px;
     }
 
     .brand {
       display: inline-flex;
-      align-items: center;
-      gap: 11px;
+      align-items: baseline;
+      gap: 8px;
       text-decoration: none;
       color: var(--text);
-      font-weight: 600;
-      font-size: 0.95rem;
-      letter-spacing: -0.01em;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
 
-    .brand-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 9px;
-      display: grid;
-      place-items: center;
-      background: #07090d;
-      border: 1px solid rgba(34, 230, 255, 0.28);
-      box-shadow: 0 0 18px rgba(34, 230, 255, 0.22);
-      flex-shrink: 0;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .ver-pill {
+    .brand-ver {
       font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--cyan);
-      background: var(--cyan-soft);
-      border: 1px solid rgba(34, 230, 255, 0.28);
-      padding: 3px 10px;
-      border-radius: 999px;
-    }
-
-    .nav-link {
-      color: var(--text-2);
-      text-decoration: none;
-      font-size: 0.82rem;
+      font-size: 12px;
       font-weight: 500;
-      padding: 5px 11px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-    }
-
-    .nav-link:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--border);
-    }
-
-    /* Hero */
-    .hero {
-      text-align: center;
-      margin-bottom: 38px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--mono);
-      font-size: 0.74rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-2);
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 5px 14px;
-      margin-bottom: 18px;
-    }
-
-    .pulse {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan);
-    }
-
-    h1 {
-      margin: 0 0 14px;
-      font-size: clamp(2rem, 5vw, 3.1rem);
-      font-weight: 750;
-      letter-spacing: -0.035em;
-      line-height: 1.12;
-      color: var(--text);
-    }
-
-    .grad-accent {
-      background: linear-gradient(100deg, #ffe14d 0%, #22e6ff 48%, #7dd3fc 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-sub {
-      max-width: 660px;
-      margin: 0 auto 28px;
-      font-size: 1.02rem;
-      color: var(--text-2);
-    }
-
-    .hero-sub code {
-      color: #e2e8f0;
-    }
-
-    /* Spotlight One-Prompt Card */
-    .spotlight-wrap {
-      padding: 1px;
-      border-radius: 18px;
-      background: linear-gradient(125deg, rgba(34, 230, 255, 0.55), rgba(255, 255, 255, 0.08) 45%, rgba(255, 176, 32, 0.45));
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.48), 0 0 42px rgba(34, 230, 255, 0.08);
-      text-align: left;
-      margin-bottom: 24px;
-    }
-
-    .spotlight {
-      background: linear-gradient(180deg, rgba(16, 23, 36, 0.96), rgba(10, 14, 23, 0.98));
-      border-radius: 17px;
-      padding: 18px 20px;
-    }
-
-    .spotlight-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .spotlight-tag {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--amber);
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-weight: 600;
-    }
-
-    .prompt-box {
-      font-family: var(--mono);
-      font-size: 0.94rem;
-      color: #f8fafc;
-      background: rgba(5, 8, 14, 0.85);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      padding: 14px 16px;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-
-    .spotlight-foot {
-      margin: 11px 0 0;
-      font-size: 0.83rem;
       color: var(--text-3);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
     }
 
-    .copy-primary {
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-2);
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-cta {
       appearance: none;
-      border: 1px solid rgba(34, 230, 255, 0.45);
-      background: linear-gradient(135deg, rgba(34, 230, 255, 0.2), rgba(0, 102, 255, 0.22));
-      color: #f0fdff;
+      border: 1px solid #111111;
+      background: #111111;
+      color: #ffffff;
       font-family: var(--sans);
-      font-size: 0.82rem;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 500;
       padding: 7px 15px;
       border-radius: 999px;
       cursor: pointer;
-      transition: transform 0.14s ease, box-shadow 0.16s ease, background 0.16s ease;
+      transition: opacity 0.15s ease;
     }
 
-    .copy-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 0 22px rgba(34, 230, 255, 0.28);
-      background: linear-gradient(135deg, rgba(34, 230, 255, 0.3), rgba(0, 102, 255, 0.3));
+    .nav-cta:hover {
+      opacity: 0.86;
     }
 
-    .copy-primary.is-copied {
-      border-color: rgba(52, 211, 153, 0.55);
-      background: rgba(52, 211, 153, 0.18);
-      color: #d1fae5;
-    }
-
-    /* Bento Capabilities */
-    .bento {
+    /* Two-column editorial layout */
+    .layout {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 52px 28px 96px;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 44px;
+      grid-template-columns: 196px minmax(0, 680px);
+      gap: 64px;
+      align-items: start;
     }
 
-    .bento-card {
-      background: linear-gradient(180deg, rgba(18, 25, 39, 0.72), rgba(11, 16, 25, 0.85));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      text-align: left;
+    /* Left sticky sidebar */
+    .sidebar {
+      position: sticky;
+      top: 112px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .bento-kicker {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--cyan);
-      margin-bottom: 6px;
-      letter-spacing: 0.05em;
-    }
-
-    .bento-title {
-      font-size: 0.96rem;
-      font-weight: 650;
-      margin: 0 0 5px;
+    .side-title {
+      font-size: 15px;
+      font-weight: 600;
       color: var(--text);
+      margin: 0 0 6px;
     }
 
-    .bento-desc {
-      font-size: 0.84rem;
-      color: var(--text-2);
-      margin: 0;
+    .sidebar a {
+      text-decoration: none;
+      font-size: 13.5px;
+      color: var(--text-3);
       line-height: 1.5;
+      transition: color 0.15s ease;
     }
 
-    /* Section Header */
-    .sec-head {
+    .sidebar a:hover,
+    .sidebar a.active {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* Main reading column */
+    .doc-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
+      gap: 16px;
       margin-bottom: 18px;
+      flex-wrap: wrap;
     }
 
-    .sec-title {
-      font-size: 0.78rem;
-      font-family: var(--mono);
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: var(--text-3);
+    h1 {
       margin: 0;
-    }
-
-    .safety-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 0.78rem;
-      color: #cbd5e1;
-      background: rgba(52, 211, 153, 0.09);
-      border: 1px solid rgba(52, 211, 153, 0.25);
-      padding: 4px 12px;
-      border-radius: 999px;
-    }
-
-    .safety-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--emerald);
-    }
-
-    /* 4-Step Timeline */
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      margin-bottom: 42px;
-    }
-
-    .step-card {
-      background: linear-gradient(180deg, rgba(16, 22, 34, 0.88), rgba(11, 15, 24, 0.94));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px 24px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    }
-
-    .step-head {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
-
-    .step-num {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      font-family: var(--mono);
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: var(--cyan);
-      background: var(--cyan-soft);
-      border: 1px solid rgba(34, 230, 255, 0.3);
-      flex-shrink: 0;
-    }
-
-    h2 {
-      margin: 0;
-      font-size: 1.14rem;
+      font-size: 24px;
       font-weight: 680;
       letter-spacing: -0.02em;
+      color: var(--text);
       line-height: 1.3;
+    }
+
+    .copy-pill {
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .copy-pill:hover {
+      background: #f7f7f8;
+      border-color: #c8c8d0;
+    }
+
+    .lead-title {
+      margin: 0 0 8px;
+      font-size: 14px;
+      font-weight: 600;
       color: var(--text);
     }
 
-    .step-card ol {
-      margin: 0;
-      padding-left: 20px;
-      color: var(--text-2);
+    p {
+      margin: 0 0 14px;
     }
 
-    .step-card ol > li {
-      margin-bottom: 12px;
-    }
-
-    .step-card ol > li:last-child {
+    p:last-child {
       margin-bottom: 0;
     }
 
-    .install-opts {
-      list-style: none;
-      margin: 10px 0 4px;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    section {
+      padding-top: 32px;
+      margin-top: 32px;
+      border-top: 1px solid var(--border);
+      scroll-margin-top: 86px;
     }
 
-    .opt-desc {
-      font-size: 0.88rem;
-      color: var(--text-2);
-      margin-bottom: 7px;
+    h2 {
+      margin: 0 0 14px;
+      font-size: 15.5px;
+      font-weight: 650;
+      color: var(--text);
+      line-height: 1.4;
     }
 
-    p {
-      margin: 10px 0 0;
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    ol > li {
+      margin-bottom: 12px;
+    }
+
+    ol > li:last-child {
+      margin-bottom: 0;
+    }
+
+    .sub-block {
+      margin: 18px 0;
+    }
+
+    .sub-label {
+      margin: 0 0 4px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .sub-note {
+      margin: 0 0 10px;
+      font-size: 13.5px;
       color: var(--text-2);
-      font-size: 0.92rem;
     }
 
     code {
       font-family: var(--mono);
-      font-size: 0.85em;
-      color: #e2e8f0;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      padding: 1px 6px;
-      border-radius: 6px;
+      font-size: 12.8px;
+      color: #18181b;
+      background: var(--inline-bg);
+      padding: 1.5px 6px;
+      border-radius: 5px;
       white-space: nowrap;
     }
 
-    /* Terminal Code Blocks */
-    .term {
-      margin: 10px 0 6px;
-      border-radius: var(--radius-sm);
+    /* Crisp dark code strips on pure white background */
+    .code-box {
+      position: relative;
+      margin: 10px 0 14px;
+      border-radius: 10px;
       background: var(--code-bg);
-      border: 1px solid rgba(255, 255, 255, 0.09);
       overflow: hidden;
-    }
-
-    .term-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 8px 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .term-meta {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .term-dots {
-      display: inline-flex;
-      gap: 5px;
-    }
-
-    .term-dots i {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.16);
-      display: block;
-    }
-
-    .term-label {
-      font-family: var(--mono);
-      font-size: 0.74rem;
-      color: var(--text-3);
-    }
-
-    .pill {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 999px;
-    }
-
-    .pill-amber {
-      color: #fde68a;
-      background: var(--amber-soft);
-      border: 1px solid rgba(255, 176, 32, 0.34);
-    }
-
-    .pill-muted {
-      color: #94a3b8;
-      background: rgba(148, 163, 184, 0.1);
-      border: 1px solid rgba(148, 163, 184, 0.22);
-    }
-
-    .pill-cyan {
-      color: #a5f3fc;
-      background: var(--cyan-soft);
-      border: 1px solid rgba(34, 230, 255, 0.28);
-    }
-
-    .copy-btn {
-      appearance: none;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-2);
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      padding: 4px 10px;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-      flex-shrink: 0;
-    }
-
-    .copy-btn:hover {
-      color: var(--text);
-      border-color: var(--border-strong);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .copy-btn.is-copied {
-      color: #a7f3d0;
-      border-color: rgba(52, 211, 153, 0.45);
-      background: rgba(52, 211, 153, 0.14);
     }
 
     pre {
       margin: 0;
-      padding: 13px 15px;
+      padding: 14px 68px 14px 16px;
       overflow-x: auto;
-      font-size: 0.84rem;
-      line-height: 1.58;
+      font-size: 13px;
+      line-height: 1.6;
       scrollbar-width: thin;
-      scrollbar-color: rgba(148, 163, 184, 0.26) transparent;
+      scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
     }
 
-    pre::-webkit-scrollbar, .prompt-box::-webkit-scrollbar {
-      height: 6px;
+    pre::-webkit-scrollbar {
+      height: 5px;
     }
 
-    pre::-webkit-scrollbar-track, .prompt-box::-webkit-scrollbar-track {
+    pre::-webkit-scrollbar-track {
       background: transparent;
     }
 
-    pre::-webkit-scrollbar-thumb, .prompt-box::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.24);
+    pre::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.22);
       border-radius: 999px;
-    }
-
-    pre::-webkit-scrollbar-thumb:hover, .prompt-box::-webkit-scrollbar-thumb:hover {
-      background: rgba(148, 163, 184, 0.42);
     }
 
     pre code {
       background: none;
-      border: none;
       padding: 0;
-      color: #e2e8f0;
+      border-radius: 0;
+      color: var(--code-text);
       font-size: inherit;
       white-space: pre;
     }
 
-    /* Callout */
-    .callout {
-      margin-top: 14px;
-      padding: 12px 15px;
-      border-radius: 11px;
-      background: rgba(255, 176, 32, 0.08);
-      border: 1px solid rgba(255, 176, 32, 0.26);
-      color: #fef3c7;
-      font-size: 0.88rem;
-    }
-
-    .callout strong {
-      color: #fde68a;
-    }
-
-    /* Starter Prompts */
-    .prompts-sec {
-      margin-bottom: 44px;
-    }
-
-    .prompt-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .prompt-chip {
+    .copy-inline {
+      position: absolute;
+      top: 10px;
+      right: 10px;
       appearance: none;
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 15px 16px;
-      border-radius: 14px;
-      background: rgba(14, 19, 30, 0.82);
-      border: 1px solid var(--border);
-      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
       font-family: var(--sans);
+      font-size: 12px;
+      padding: 3px 9px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: border-color 0.16s ease, transform 0.14s ease, background 0.16s ease;
+      transition: background 0.15s ease, color 0.15s ease;
     }
 
-    .prompt-chip:hover {
-      transform: translateY(-2px);
-      border-color: rgba(34, 230, 255, 0.36);
-      background: rgba(18, 26, 40, 0.92);
+    .copy-inline:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
     }
 
-    .prompt-text {
-      font-size: 0.86rem;
-      line-height: 1.5;
-      color: #e2e8f0;
+    .note-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: #fafafa;
+      border: 1px solid var(--border);
+      font-size: 13.5px;
+      color: var(--text-2);
     }
 
-    .prompt-act {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--cyan);
+    .note-box strong {
+      color: var(--text);
     }
 
-    .prompt-chip.is-copied {
-      border-color: rgba(52, 211, 153, 0.5);
-    }
-
-    .prompt-chip.is-copied .prompt-act {
-      color: var(--emerald);
-    }
-
-    /* Footer */
-    footer {
-      padding-top: 22px;
+    .example-list {
+      list-style: none;
+      margin: 12px 0 0;
+      padding: 0;
       border-top: 1px solid var(--border);
+    }
+
+    .example-list li {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ex-text {
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .copy-ghost {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--text-2);
+      font-family: var(--sans);
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .copy-ghost:hover {
+      color: var(--text);
+      border-color: #c8c8d0;
+      background: #f7f7f8;
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       flex-wrap: wrap;
-      font-size: 0.82rem;
+      font-size: 12.5px;
       color: var(--text-3);
     }
 
     footer a {
-      color: var(--text-2);
+      color: var(--text-3);
       text-decoration: none;
     }
 
     footer a:hover {
-      color: var(--cyan);
+      color: var(--text);
     }
 
     .footer-links {
       display: flex;
       gap: 16px;
-      flex-wrap: wrap;
     }
 
-    @media (max-width: 760px) {
-      .shell { padding: 16px 14px 52px; }
-      .topbar { border-radius: 16px; margin-bottom: 28px; }
-      .bento, .prompt-grid { grid-template-columns: 1fr; }
-      .step-card { padding: 18px 16px; }
-      .prompt-box { white-space: pre-wrap; word-break: break-all; }
+    @media (max-width: 820px) {
+      .header-inner { padding: 0 18px; }
+      .nav-links { display: none; }
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 28px 18px 64px;
+      }
+      .sidebar { display: none; }
       code { white-space: normal; word-break: break-word; }
       pre code { white-space: pre; word-break: normal; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="https://jimeng.jianying.com/" target="_blank" rel="noopener noreferrer">
-        <span class="brand-icon" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="jm-grad" x1="12" y1="8" x2="54" y2="54" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#ff9e1b"/>
-                <stop offset="36%" stop-color="#ffe14d"/>
-                <stop offset="68%" stop-color="#22e6ff"/>
-                <stop offset="100%" stop-color="#0066ff"/>
-              </linearGradient>
-            </defs>
-            <path d="M21 8C25 22 35 28 53 31C35 35 26 42 15 54C21 39 23 26 21 8Z" fill="url(#jm-grad)"/>
-            <rect x="35" y="38" width="20" height="15" rx="3.5" fill="#ffffff"/>
-            <polygon points="43,42.5 43,49.5 49.5,46" fill="#07090d"/>
-          </svg>
-        </span>
-        <span>Jimeng Drama</span>
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="#top">
+        <span>即梦短剧</span>
+        <span class="brand-ver">v1.0.11</span>
       </a>
-      <nav class="nav-right" aria-label="Links">
-        <span class="ver-pill">v1.0.11</span>
-        <a class="nav-link" href="https://github.com/Jeislu/jimeng-novel-plugin" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-        <a class="nav-link" href="https://jimeng.jianying.com/" target="_blank" rel="noopener noreferrer">Jimeng Canvas ↗</a>
+      <nav class="nav-links" aria-label="主导航">
+        <a href="#step-1">安装步骤</a>
+        <a href="#examples">开场示例</a>
+        <a href="https://github.com/Jeislu/jimeng-novel-plugin" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+        <a href="https://jimeng.jianying.com/" target="_blank" rel="noopener noreferrer">即梦官网</a>
       </nav>
-    </header>
+      <button type="button" class="nav-cta" data-copy="请阅读 jeislu.github.io/jimeng-novel-plugin/ 并帮我安装即梦短剧 Codex 插件">复制安装指令</button>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="目录">
+      <p class="side-title">快速开始</p>
+      <a href="#top" class="active">一句话安装</a>
+      <a href="#step-1">1. 安装 CLI</a>
+      <a href="#step-2">2. 安装插件</a>
+      <a href="#step-3">3. 账号授权</a>
+      <a href="#step-4">4. 零扣费验证</a>
+      <a href="#examples">5. 开场示例</a>
+    </aside>
 
     <main>
-      <section class="hero">
-        <div class="eyebrow"><span class="pulse" aria-hidden="true"></span>Codex Plugin · Skills Only · Multi-Platform</div>
-        <h1>Install <span class="grad-accent">Jimeng Drama</span> Plugin for Codex</h1>
-        <p class="hero-sub">Follow these steps in order to install and verify the <code>jimeng-drama</code> plugin for <code>jimeng-novel</code>. Do not submit any paid generation jobs during setup or verification.</p>
+      <div class="doc-head">
+        <h1>即梦短剧 Codex 插件安装指引</h1>
+        <button type="button" class="copy-pill" data-copy="# 即梦短剧 Codex 插件安装指引（Jimeng Drama v1.0.11）
 
-        <div class="spotlight-wrap">
-          <div class="spotlight">
-            <div class="spotlight-top">
-              <span class="spotlight-tag">✦ One-Prompt Install · Paste into Codex</span>
-              <button type="button" class="copy-primary" data-copy="Read jeislu.github.io/jimeng-novel-plugin/ to install the Jimeng Drama plugin">Copy Prompt</button>
-            </div>
-            <div class="prompt-box">Read jeislu.github.io/jimeng-novel-plugin/ to install the Jimeng Drama plugin</div>
-            <div class="spotlight-foot">
-              <span>Codex reads this page, installs the CLI, adds <code>jimeng-plugins</code>, and verifies read-only.</span>
-              <span>Version <code>v1.0.11</code></span>
-            </div>
-          </div>
-        </div>
+请按以下顺序为用户完成安装与校验。安装和验证过程仅做只读检查，不要提交任何扣费生成任务。
 
-        <div class="bento" aria-label="Capabilities">
-          <div class="bento-card">
-            <div class="bento-kicker">01 · SCRIPT &amp; ART</div>
-            <h3 class="bento-title">Story to Storyboard</h3>
-            <p class="bento-desc">Draft episode outlines, scripts, character sheets, and shot prompts structured for Jimeng Canvas.</p>
-          </div>
-          <div class="bento-card">
-            <div class="bento-kicker">02 · CANVAS GENERATION</div>
-            <h3 class="bento-title">Image, Video &amp; Audio</h3>
-            <p class="bento-desc">Generate assets directly onto shared drama canvases with transparent credit estimation before submission.</p>
-          </div>
-          <div class="bento-card">
-            <div class="bento-kicker">03 · FINAL CUT</div>
-            <h3 class="bento-title">Local Composition</h3>
-            <p class="bento-desc">Sync assets, inspect frames, and assemble finished multi-episode cuts locally with FFmpeg.</p>
-          </div>
+## 1. 安装或更新 `jimeng-novel` CLI
+
+1. 检查基础环境：确认已安装 Node.js 18+（`node -v`）与 Python 3.10+（`python3 --version`），并检查当前是否已有 `jimeng-novel`（`METRICS_LOG_LEVEL=none jimeng-novel --version`）。
+2. 若未安装或版本过旧，请执行以下命令安装或更新：
+   - 推荐 · 跨平台 npm 安装（macOS / Linux / Windows，需 Node.js 18+）：
+     ```bash
+     npm install -g &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz&#x27;
+     ```
+   - 备选 · macOS / Linux 一键安装脚本（自动隔离散装 Skill，不写入 `~/.agents/skills` 与 `~/.codex/skills`，避免与 Codex 插件重复加载）：
+     ```bash
+     (set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)
+     ```
+3. 检查命令解析路径（macOS / Linux 执行 `command -v jimeng-novel`，Windows 执行 `where.exe jimeng-novel`），确认未被 `~/.local/bin/jimeng-novel` 旧入口遮蔽，再运行 `METRICS_LOG_LEVEL=none jimeng-novel --version` 核对版本。
+
+## 2. 注册插件市场并安装插件
+
+1. 通过 Codex CLI 添加市场并安装插件：
+
+   ```bash
+   codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
+   codex plugin add jimeng-drama@jimeng-plugins --json
+   ```
+
+   - 如果本地已注册过 `jimeng-plugins`，先执行 `codex plugin marketplace upgrade jimeng-plugins` 更新市场后再执行 `codex plugin add jimeng-drama@jimeng-plugins`。
+2. 清理历史散装 Skill 软链接（仅删除 `~/.agents/skills` 与 `$CODEX_HOME/skills` 下由旧安装器创建、指向 `~/.local/share/jimeng-novel/releases/` 的软链接，绝不删除用户自建目录）：
+
+   ```bash
+   python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;
+   ```
+
+## 3. 授权即梦账号
+
+1. 运行 `METRICS_LOG_LEVEL=none jimeng-novel status` 检查登录状态；若已登录可直接进入第 4 步。
+2. 若未登录，查看 `jimeng-novel login --help` 发起非交互式登录，获取官方授权链接（`jimeng.jianying.com`）。在浏览器打开并向用户发送可点击链接，随后执行 CLI 返回的等待命令直至授权完成。
+
+## 4. 零扣费只读验证
+
+1. 运行以下只读命令核对账号与模型列表（不消耗积分）：
+   ```bash
+   METRICS_LOG_LEVEL=none jimeng-novel account get
+   METRICS_LOG_LEVEL=none jimeng-novel model list --type image
+   ```
+2. 验证通过后告知用户安装完成，并提醒用户**新建一个 Codex 对话**以加载 `jimeng-drama` 插件 Skill。
+">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span>复制指引</span>
+        </button>
+      </div>
+
+      <p class="lead-title">一句话安装（直接发给 Codex）</p>
+      <p>本页是 <code>jimeng-drama</code>（<code>jimeng-novel</code> CLI 配套插件，v1.0.11）的完整安装与校验说明。将下方指令直接发送给 Codex，即可自动完成 CLI 安装、插件注册与只读验证；<strong>整个安装与验证过程不会提交任何扣费生成任务</strong>。</p>
+
+      <div class="code-box"><pre><code>请阅读 jeislu.github.io/jimeng-novel-plugin/ 并帮我安装即梦短剧 Codex 插件</code></pre><button type="button" class="copy-inline" data-copy="请阅读 jeislu.github.io/jimeng-novel-plugin/ 并帮我安装即梦短剧 Codex 插件" aria-label="复制命令">复制</button></div>
+
+      <section id="step-1">
+        <h2>1. 安装或更新 jimeng-novel CLI</h2>
+        <p>先检查基础环境：确认已安装 Node.js 18+（<code>node -v</code>）和 Python 3.10+（<code>python3 --version</code>），并执行 <code>METRICS_LOG_LEVEL=none jimeng-novel --version</code> 查看当前状态。若未安装或版本过旧，任选以下一种方式：</p>
+
+        <div class="sub-block"><p class="sub-label">跨平台 npm 安装（推荐）</p><p class="sub-note">支持 macOS、Linux 与 Windows，需 Node.js 18+：</p><div class="code-box"><pre><code>npm install -g &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz&#x27;</code></pre><button type="button" class="copy-inline" data-copy="npm install -g &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz&#x27;" aria-label="复制命令">复制</button></div></div>
+          <div class="sub-block"><p class="sub-label">macOS / Linux 一键脚本（备选）</p><p class="sub-note">自动将散装 Skill 隔离到独立目录，不写入 <code>~/.agents/skills</code> 和 <code>~/.codex/skills</code>，避免与 Codex 插件重复加载：</p><div class="code-box"><pre><code>(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)</code></pre><button type="button" class="copy-inline" data-copy="(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)" aria-label="复制命令">复制</button></div></div>
+
+        <p>安装完成后，检查命令实际指向（macOS / Linux 执行 <code>command -v jimeng-novel</code>，Windows 执行 <code>where.exe jimeng-novel</code>），确认没有被 <code>~/.local/bin/jimeng-novel</code> 旧入口遮蔽，再确认 <code>METRICS_LOG_LEVEL=none jimeng-novel --version</code> 正常输出版本号。</p>
+      </section>
+
+      <section id="step-2">
+        <h2>2. 注册插件市场并安装插件</h2>
+        <p>通过 Codex CLI 添加插件市场并安装 <code>jimeng-drama</code>：</p>
+
+        <div class="code-box"><pre><code>codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
+codex plugin add jimeng-drama@jimeng-plugins --json</code></pre><button type="button" class="copy-inline" data-copy="codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
+codex plugin add jimeng-drama@jimeng-plugins --json" aria-label="复制命令">复制</button></div>
+
+        <p>如果本机之前已注册过 <code>jimeng-plugins</code>，先执行 <code>codex plugin marketplace upgrade jimeng-plugins</code> 刷新市场，再重新安装插件。</p>
+
+        <div class="sub-block">
+          <p class="sub-label">清理旧安装器的散装 Skill 软链接（防重复加载）</p>
+          <p class="sub-note">如果你此前直接运行过一键安装脚本，执行下方命令可安全移除 <code>~/.agents/skills</code> 与 <code>$CODEX_HOME/skills</code> 中指向 <code>~/.local/share/jimeng-novel/releases/</code> 的软链接，绝不会触碰用户自建目录：</p>
+          <div class="code-box"><pre><code>python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;</code></pre><button type="button" class="copy-inline" data-copy="python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;" aria-label="复制命令">复制</button></div>
         </div>
       </section>
 
-      <div class="sec-head">
-        <p class="sec-title">Installation &amp; Verification Procedure</p>
-        <span class="safety-badge"><span class="safety-dot" aria-hidden="true"></span>Zero paid generation jobs during setup</span>
-      </div>
+      <section id="step-3">
+        <h2>3. 授权即梦账号</h2>
+        <ol>
+          <li>执行 <code>METRICS_LOG_LEVEL=none jimeng-novel status</code> 查看当前授权状态；若已登录，直接跳过本步进入第 4 步。</li>
+          <li>若未登录，先查看 <code>jimeng-novel login --help</code> 发起非交互式登录，取得官方授权链接（<code>jimeng.jianying.com</code>）。在浏览器中打开并向用户发送可点击链接，随后执行 CLI 返回的等待命令直至授权完成。</li>
+        </ol>
+      </section>
 
-      <div class="steps">
-        <section class="step-card">
-          <div class="step-head">
-            <span class="step-num">01</span>
-            <h2>Step 1: Ensure jimeng-novel CLI is installed</h2>
-          </div>
-          <ol>
-            <li>Verify Node.js 18+ (<code>node -v</code>), Python 3.10+ (<code>python3 --version</code>), and check <code>METRICS_LOG_LEVEL=none jimeng-novel --version</code>.</li>
-            <li>If missing or outdated, install via:
-              <ul class="install-opts">
-                <li class="install-opt"><div class="opt-desc">Cross-platform (macOS / Linux / Windows, Node.js 18+):</div><div class="term"><div class="term-head"><div class="term-meta"><span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-label">npm · Cross-Platform</span><span class="pill pill-amber">Recommended</span></div><button type="button" class="copy-btn" data-copy="npm install -g &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz&#x27;" aria-label="Copy command">Copy</button></div><pre><code>npm install -g &#x27;https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz&#x27;</code></pre></div></li>
-        <li class="install-opt"><div class="opt-desc">macOS / Linux standalone installer (isolates standalone skills away from <code>~/.agents/skills</code> and <code>~/.codex/skills</code> so the Codex plugin stays the single skill source):</div><div class="term"><div class="term-head"><div class="term-meta"><span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-label">bash · macOS / Linux</span><span class="pill pill-muted">Fallback · Isolated Skills</span></div><button type="button" class="copy-btn" data-copy="(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)" aria-label="Copy command">Copy</button></div><pre><code>(set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir &quot;$HOME/.local/share/jimeng-novel/standalone-skills&quot;)</code></pre></div></li>
-              </ul>
-            </li>
-            <li>Check binary resolution (<code>command -v jimeng-novel</code> on macOS/Linux, <code>where.exe jimeng-novel</code> on Windows) to ensure no stale launcher shadows the installed version.</li>
-          </ol>
-        </section>
+      <section id="step-4">
+        <h2>4. 零扣费只读验证</h2>
+        <p>运行以下只读命令核对账号信息与可用模型列表（不会发起任何生成或扣费操作）：</p>
 
-        <section class="step-card">
-          <div class="step-head">
-            <span class="step-num">02</span>
-            <h2>Step 2: Register Marketplace and Install Plugin</h2>
-          </div>
-          <ol>
-            <li>Add the marketplace and install the plugin:
-              <div class="term"><div class="term-head"><div class="term-meta"><span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-label">Codex CLI</span><span class="pill pill-cyan">jimeng-drama@jimeng-plugins</span></div><button type="button" class="copy-btn" data-copy="codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
-codex plugin add jimeng-drama@jimeng-plugins --json" aria-label="Copy command">Copy</button></div><pre><code>codex plugin marketplace add https://github.com/Jeislu/jimeng-novel-plugin --ref main --json
-codex plugin add jimeng-drama@jimeng-plugins --json</code></pre></div>
-              <p>If <code>jimeng-plugins</code> already exists, refresh with <code>codex plugin marketplace upgrade jimeng-plugins</code> first.</p>
-            </li>
-            <li>Remove any pre-existing installer-managed standalone <code>jimeng-drama</code> symlinks under <code>~/.agents/skills</code> and <code>$CODEX_HOME/skills</code> so Codex does not load duplicate skills (only unlinks symlinks pointing into <code>~/.local/share/jimeng-novel/releases/</code>; never touches user-owned folders):
-              <div class="term"><div class="term-head"><div class="term-meta"><span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-label">Safe Symlink Cleanup · Python</span><span class="pill pill-muted">No User Files Touched</span></div><button type="button" class="copy-btn" data-copy="python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;" aria-label="Copy command">Copy</button></div><pre><code>python3 -c &#x27;import os; from pathlib import Path; rel = (Path.home() / &quot;.local/share/jimeng-novel/releases&quot;).resolve(); dirs = [Path.home() / &quot;.agents/skills&quot;, Path(os.environ.get(&quot;CODEX_HOME&quot;, str(Path.home() / &quot;.codex&quot;))) / &quot;skills&quot;]; [p.unlink() for d in dirs for n in (&quot;jimeng-drama&quot;, &quot;jimeng-short-drama&quot;) for p in (d / n,) if p.is_symlink() and p.resolve().name == n and p.resolve().parent.name == &quot;skills&quot; and p.resolve().parent.parent.parent == rel]&#x27;</code></pre></div>
-            </li>
-          </ol>
-        </section>
+        <div class="code-box"><pre><code>METRICS_LOG_LEVEL=none jimeng-novel account get
+METRICS_LOG_LEVEL=none jimeng-novel model list --type image</code></pre><button type="button" class="copy-inline" data-copy="METRICS_LOG_LEVEL=none jimeng-novel account get
+METRICS_LOG_LEVEL=none jimeng-novel model list --type image" aria-label="复制命令">复制</button></div>
 
-        <section class="step-card">
-          <div class="step-head">
-            <span class="step-num">03</span>
-            <h2>Step 3: Authorize Jimeng Account</h2>
-          </div>
-          <ol>
-            <li>Run <code>METRICS_LOG_LEVEL=none jimeng-novel status</code>.</li>
-            <li>If not logged in, use <code>jimeng-novel login --help</code> to start non-interactive login, open the official <code>jimeng.jianying.com</code> authorization URL in the browser, share the clickable link, and run the wait command returned by the CLI.</li>
-          </ol>
-        </section>
-
-        <section class="step-card">
-          <div class="step-head">
-            <span class="step-num">04</span>
-            <h2>Step 4: Read-Only Verification</h2>
-          </div>
-          <div class="term"><div class="term-head"><div class="term-meta"><span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="term-label">Read-Only Checks</span><span class="pill pill-cyan">Zero Credits</span></div><button type="button" class="copy-btn" data-copy="METRICS_LOG_LEVEL=none jimeng-novel account get
-METRICS_LOG_LEVEL=none jimeng-novel model list --type image" aria-label="Copy command">Copy</button></div><pre><code>METRICS_LOG_LEVEL=none jimeng-novel account get
-METRICS_LOG_LEVEL=none jimeng-novel model list --type image</code></pre></div>
-          <div class="callout">
-            Ask the user to start a <strong>new Codex session</strong> so the installed <code>jimeng-drama</code> plugin skills load cleanly.
-          </div>
-        </section>
-      </div>
-
-      <section class="prompts-sec" aria-label="Starter Prompts">
-        <div class="sec-head">
-          <p class="sec-title">Starter Prompts · Try in a New Codex Session</p>
-        </div>
-        <div class="prompt-grid">
-          <button type="button" class="prompt-chip" data-copy="在即梦短剧画布新建一个短剧项目，帮我写第 1 集设定与剧本"><span class="prompt-text">在即梦短剧画布新建一个短剧项目，帮我写第 1 集设定与剧本</span><span class="prompt-act">Copy</span></button>
-        <button type="button" class="prompt-chip" data-copy="查看当前即梦账号积分余额和可用图片、视频模型"><span class="prompt-text">查看当前即梦账号积分余额和可用图片、视频模型</span><span class="prompt-act">Copy</span></button>
-        <button type="button" class="prompt-chip" data-copy="根据已有分镜生成角色设定图、视频片段并合成为成片"><span class="prompt-text">根据已有分镜生成角色设定图、视频片段并合成为成片</span><span class="prompt-act">Copy</span></button>
+        <div class="note-box">
+          验证通过后即可告知用户安装完成，并提醒用户<strong>新建一个 Codex 对话</strong>，让 <code>jimeng-drama</code> 插件 Skill 正式生效。
         </div>
       </section>
+
+      <section id="examples">
+        <h2>5. 新建对话即可开始创作</h2>
+        <p>安装完成并开启新会话后，可以直接发送下面任意一句试试：</p>
+        <ul class="example-list">
+          <li><span class="ex-text">在即梦短剧画布新建一个短剧项目，帮我写第 1 集设定与剧本</span><button type="button" class="copy-ghost" data-copy="在即梦短剧画布新建一个短剧项目，帮我写第 1 集设定与剧本">复制</button></li>
+          <li><span class="ex-text">查看当前即梦账号积分余额和可用图片、视频模型</span><button type="button" class="copy-ghost" data-copy="查看当前即梦账号积分余额和可用图片、视频模型">复制</button></li>
+          <li><span class="ex-text">根据已有分镜生成角色设定图、视频片段并合成为成片</span><button type="button" class="copy-ghost" data-copy="根据已有分镜生成角色设定图、视频片段并合成为成片">复制</button></li>
+        </ul>
+      </section>
+
+      <footer>
+        <span>即梦短剧 Codex 插件 · Jimeng Drama v1.0.11</span>
+        <div class="footer-links">
+          <a href="https://github.com/Jeislu/jimeng-novel-plugin" target="_blank" rel="noopener noreferrer">GitHub 仓库</a>
+          <a href="https://jimeng.jianying.com/" target="_blank" rel="noopener noreferrer">即梦官网</a>
+        </div>
+      </footer>
     </main>
-
-    <footer>
-      <span>Jimeng Drama Plugin for Codex · <code>v1.0.11</code></span>
-      <div class="footer-links">
-        <a href="https://github.com/Jeislu/jimeng-novel-plugin" target="_blank" rel="noopener noreferrer">Marketplace Repo</a>
-        <a href="https://jimeng.jianying.com/" target="_blank" rel="noopener noreferrer">Jimeng Canvas</a>
-      </div>
-    </footer>
   </div>
 
   <script>
@@ -883,15 +607,13 @@ METRICS_LOG_LEVEL=none jimeng-novel model list --type image</code></pre></div>
         var text = btn.getAttribute('data-copy');
         if (!text) return;
         copyText(text).then(function () {
-          var labelEl = btn.querySelector('.prompt-act') || btn;
-          var prev = labelEl.textContent;
-          btn.classList.add('is-copied');
-          labelEl.textContent = 'Copied ✓';
+          var target = btn.querySelector('span') || btn;
+          var prev = target.textContent;
+          target.textContent = '已复制';
           clearTimeout(btn._t);
           btn._t = setTimeout(function () {
-            btn.classList.remove('is-copied');
-            labelEl.textContent = prev;
-          }, 1600);
+            target.textContent = prev;
+          }, 1500);
         });
       });
     })();
