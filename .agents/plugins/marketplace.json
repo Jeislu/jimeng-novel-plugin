@@ -1,0 +1,20 @@
+{
+  "name": "jimeng-plugins",
+  "interface": {
+    "displayName": "Jimeng Official Plugins"
+  },
+  "plugins": [
+    {
+      "name": "jimeng-drama",
+      "source": {
+        "source": "local",
+        "path": "./plugins/jimeng-drama"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Creativity"
+    }
+  ]
+}

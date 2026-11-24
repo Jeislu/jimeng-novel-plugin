@@ -1,0 +1,44 @@
+{
+  "name": "jimeng-drama",
+  "version": "1.0.11",
+  "description": "Create multi-episode short dramas on Jimeng Canvas via jimeng-novel CLI: scripts, character/scene art, storyboards, video clips, and composition.",
+  "author": {
+    "name": "Jimeng",
+    "url": "https://jimeng.jianying.com/"
+  },
+  "homepage": "https://jimeng.jianying.com/",
+  "license": "Proprietary",
+  "keywords": [
+    "jimeng",
+    "short-drama",
+    "video-generation",
+    "storyboard",
+    "canvas",
+    "cli",
+    "creative-workflow"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jimeng Drama",
+    "shortDescription": "Short drama creation workflow on Jimeng Canvas via jimeng-novel CLI",
+    "longDescription": "Turn a story idea or existing script into multi-episode short dramas on Jimeng Canvas using the jimeng-novel CLI. Covers story setting, episode outlines, scriptwriting, character/scene sheets, storyboard prompting, image/video/audio generation, credit estimation, canvas syncing, and local FFmpeg composition.",
+    "developerName": "Jimeng",
+    "category": "Creativity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://jimeng.jianying.com/",
+    "defaultPrompt": [
+      "在即梦短剧画布新建一个短剧项目，帮我写第 1 集设定与剧本",
+      "查看当前即梦账号积分余额和可用图片、视频模型",
+      "根据已有分镜生成角色设定图、视频片段并合成为成片"
+    ],
+    "brandColor": "#111827",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png",
+    "screenshots": []
+  },
+  "repository": "https://github.com/Jeislu/jimeng-novel-plugin"
+}
