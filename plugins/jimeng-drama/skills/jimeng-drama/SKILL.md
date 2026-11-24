@@ -83,10 +83,18 @@ md 都由你写，一个实体一个 `##` 小节；图和视频由 CLI 的 `--ou
 
 首次使用前先检查 `jimeng-novel --version` 与 `jimeng-novel status`（启动前设置 `METRICS_LOG_LEVEL=none` 避免依赖日志混入 JSON）。运行环境需要 Node.js 18+ 与 Python 3.10+；成片合成与抽帧另需 FFmpeg。日常创作不自动更新。
 
-跨平台安装或更新 CLI（macOS / Linux / Windows，需 Node.js 18+）：
+跨平台安装或更新到最新 CLI（自动读取固定指针 `https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json` 中的 `npm_url`，需 Node.js 18+）：
+
+macOS / Linux：
 
 ```bash
-npm install -g 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz'
+TGZ_URL="$(node -e 'fetch("https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json").then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(!/^https:\/\/\S+\.tgz$/.test(d.npm_url||""))process.exit(1);console.log(d.npm_url)})')" && npm install -g "$TGZ_URL"
+```
+
+Windows PowerShell：
+
+```powershell
+$u = (Invoke-RestMethod 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json').npm_url; if ($u -notmatch '^https://\S+\.tgz$') { throw 'invalid npm_url' }; npm install -g $u
 ```
 
 macOS / Linux 备选一键安装脚本（或升级已有脚本安装；隔离散装 Skill 以免与 Codex 插件重复加载）：

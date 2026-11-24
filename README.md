@@ -16,7 +16,9 @@ Read jeislu.github.io/jimeng-novel-plugin/ to install the Jimeng Drama plugin
 
 ```bash
 # 1. Install jimeng-novel CLI (Node.js 18+, Python 3.10+; isolates standalone skills from Codex)
-npm install -g 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz'
+TGZ_URL="$(node -e 'fetch("https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json").then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(!/^https:\/\/\S+\.tgz$/.test(d.npm_url||""))process.exit(1);console.log(d.npm_url)})')" && npm install -g "$TGZ_URL"
+# Windows PowerShell:
+# $u = (Invoke-RestMethod 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json').npm_url; if ($u -notmatch '^https://\S+\.tgz$') { throw 'invalid npm_url' }; npm install -g $u
 # Or macOS / Linux standalone fallback:
 # (set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir "$HOME/.local/share/jimeng-novel/standalone-skills")
 

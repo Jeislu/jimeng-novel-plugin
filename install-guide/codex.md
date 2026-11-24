@@ -6,10 +6,15 @@
 
 1. 检查基础环境：确认已安装 Node.js 18+（`node -v`）与 Python 3.10+（`python3 --version`），并检查当前是否已有 `jimeng-novel`（`METRICS_LOG_LEVEL=none jimeng-novel --version`）。
 2. 若未安装或版本过旧，请执行以下命令安装或更新：
-   - 推荐 · 跨平台 npm 安装（macOS / Linux / Windows，需 Node.js 18+）：
-     ```bash
-     npm install -g 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/versions/1.0.11/scm-1.0.0.424/general/jimeng-novel-1.0.11-dev.afb84393b7ee.tgz'
-     ```
+   - 推荐 · 跨平台 npm 安装（自动从固定指针 `https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json` 读取最新版本，需 Node.js 18+）：
+     - macOS / Linux：
+       ```bash
+       TGZ_URL="$(node -e 'fetch("https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json").then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{if(!/^https:\/\/\S+\.tgz$/.test(d.npm_url||""))process.exit(1);console.log(d.npm_url)})')" && npm install -g "$TGZ_URL"
+       ```
+     - Windows PowerShell：
+       ```powershell
+       $u = (Invoke-RestMethod 'https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/latest.json').npm_url; if ($u -notmatch '^https://\S+\.tgz$') { throw 'invalid npm_url' }; npm install -g $u
+       ```
    - 备选 · macOS / Linux 一键安装脚本（自动隔离散装 Skill，不写入 `~/.agents/skills` 与 `~/.codex/skills`，避免与 Codex 插件重复加载）：
      ```bash
      (set -o pipefail; curl -fsSL https://jimeng.jianying.com/novel-cli | bash -s -- --skills-dir "$HOME/.local/share/jimeng-novel/standalone-skills")
